@@ -12,7 +12,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel = "icon" href = "images/favicon.png" type = "image/png">
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -164,9 +163,59 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-			<script src="https://www.solodev.com/assets/pagination/jquery.twbsPagination.js"></script>
-			<script src="assets/js/paging.js"></script>
+			<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+			<link href="pagination.css" rel="stylesheet">
+
+			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+			<script type="text/javascript" src="https://www.solodev.com/assets/pagination/jquery.twbsPagination.js"></script>
+
+			<script type="text/javascript">
+			$(document).ready(function() {
+			$('#pagination-demo').twbsPagination({
+			totalPages: 5,
+			// the current page that show on start
+			startPage: 1,
+
+			// maximum visible pages
+			visiblePages: 5,
+
+			initiateStartPageClick: true,
+
+			// template for pagination links
+			href: false,
+
+			// variable name in href template for page number
+			hrefVariable: '{{number}}',
+
+			// Text labels
+			first: 'First',
+			prev: 'Previous',
+			next: 'Next',
+			last: 'Last',
+
+			// carousel-style pagination
+			loop: false,
+
+			// callback function
+			onPageClick: function (event, page) {
+			   $('.page-active').removeClass('page-active');
+			  $('#page'+page).addClass('page-active');
+			},
+
+			// pagination Classes
+			paginationClass: 'pagination',
+			nextClass: 'next',
+			prevClass: 'prev',
+			lastClass: 'last',
+			firstClass: 'first',
+			pageClass: 'page',
+			activeClass: 'active',
+			disabledClass: 'disabled'
+
+			});
+
+			});
+			</script>
 
 	</body>
 </html>
