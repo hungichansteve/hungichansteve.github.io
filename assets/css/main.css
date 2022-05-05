@@ -4249,7 +4249,7 @@ input, select, textarea {
 		padding: 0;
 	}
 
-		.pagination a, .pagination span {
+		.pagination a {
 			-moz-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
 			-webkit-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
 			-ms-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
@@ -4268,41 +4268,6 @@ input, select, textarea {
 			text-align: center;
 			text-decoration: none;
 			text-transform: uppercase;
-		}
-
-		.pagination .next, .pagination .previous {
-			text-decoration: none;
-			padding: 0 1.75rem;
-		}
-
-			.pagination .next:before, .pagination .previous:before {
-				-moz-osx-font-smoothing: grayscale;
-				-webkit-font-smoothing: antialiased;
-				display: inline-block;
-				font-style: normal;
-				font-variant: normal;
-				text-rendering: auto;
-				line-height: 1;
-				text-transform: none !important;
-				font-family: 'Font Awesome 5 Free';
-				font-weight: 900;
-			}
-
-			.pagination .next:before, .pagination .previous:before {
-				display: inline-block;
-				color: inherit !important;
-				line-height: inherit;
-			}
-
-		.pagination .previous:before {
-			content: '\f104';
-			margin-right: 0.9375em;
-		}
-
-		.pagination .next:before {
-			content: '\f105';
-			float: right;
-			margin-left: 0.9375em;
 		}
 
 		@media screen and (max-width: 980px) {
@@ -4326,7 +4291,7 @@ input, select, textarea {
 	}
 
 	.pagination a {
-		color: #212931 !important;
+		color: #ffffff !important;
 	}
 
 		.pagination a:hover {
@@ -4341,9 +4306,6 @@ input, select, textarea {
 			}
 
 		.pagination a.active {
-			background-color: #eeeeee;
+			background-color: #999999;
 		}
 
-	.pagination span {
-		color: #eeeeee;
-	}
