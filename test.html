@@ -83,8 +83,6 @@
 									<p>Below are the project showcases involving SQL, Python, and Tableau. As  I am currently at the learning stage and want some inspiration, a few are tutorial projects with customization. I began developing my projects and will keep updating the project pools in the coming future. Thank you </p>
 									
 									<section class="features">
-												<div class="jumbotron page" id="page1">
-													
 													<article>
 														<a href="https://public.tableau.com/app/profile/hung.ip.chan#!/?newProfile=&activeTab=0" class="image" target="_blank" rel="noopener noreferrer"><img src="images/pic04.png" alt="" /></a>
 														<h3 class="major">Tableau Projects</h3>
@@ -116,16 +114,20 @@
 														<p>The project is to predict the Adaptability Level of the Student in a Remote Learning Environment that answers the question: “what factors were more likely to affect students' adaptability level in the remote learning environment ?” using student data (i.e. gender, age, financial condition, etc)</p>
 														<a href="https://github.com/hungichansteve/Portfolio/blob/main/Machine%20Learning%20using%20Python/Student%20Adaptability%20Level%20in%20Online%20Education.ipynb" class="special" target="_blank" rel="noopener noreferrer">Learn more</a>
 													</article>
-												</div>
 										
-												<div class="jumbotron page" id="page2">
-													<article>
-														<a href="https://github.com/hungichansteve/Portfolio/tree/main/Tutorial%EF%BC%BFLearning/SQL" class="image" target="_blank" rel="noopener noreferrer"><img src="images/pic05.png" alt="" /></a>
-														<h3 class="major">Exploratory Analysis using SQL</h3>
-														<p>Exploration of the global data on confirmed COVID-19 death and vaccination using SQL Server. Then, identify and retrieve the meaningful data, which will then be used on Tableau Dashboard.</p>
-														<a href="https://github.com/hungichansteve/Portfolio/tree/main/Tutorial%EF%BC%BFLearning/SQL" class="special" target="_blank" rel="noopener noreferrer">Learn more</a>
-													</article>
-												</div>
+										<footer>
+											<div class="pagination">
+												<!--<a href="#" class="previous">Prev</a>-->
+												<a href="#" class="page active">1</a>
+												<a href="#" class="page">2</a>
+												<a href="#" class="page">3</a>
+												<span class="extra">&hellip;</span>
+												<a href="#" class="page">8</a>
+												<a href="#" class="page">9</a>
+												<a href="#" class="page">10</a>
+												<a href="#" class="next">Next</a>
+											</div>
+										</footer>
 									</section>
 								</div>
 							</section>
@@ -163,59 +165,6 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-			<link href="pagination.css" rel="stylesheet">
-
-			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-			<script type="text/javascript" src="https://www.solodev.com/assets/pagination/jquery.twbsPagination.js"></script>
-
-			<script type="text/javascript">
-			$(document).ready(function() {
-			$('#pagination-demo').twbsPagination({
-			totalPages: 5,
-			// the current page that show on start
-			startPage: 1,
-
-			// maximum visible pages
-			visiblePages: 5,
-
-			initiateStartPageClick: true,
-
-			// template for pagination links
-			href: false,
-
-			// variable name in href template for page number
-			hrefVariable: '{{number}}',
-
-			// Text labels
-			first: 'First',
-			prev: 'Previous',
-			next: 'Next',
-			last: 'Last',
-
-			// carousel-style pagination
-			loop: false,
-
-			// callback function
-			onPageClick: function (event, page) {
-			   $('.page-active').removeClass('page-active');
-			  $('#page'+page).addClass('page-active');
-			},
-
-			// pagination Classes
-			paginationClass: 'pagination',
-			nextClass: 'next',
-			prevClass: 'prev',
-			lastClass: 'last',
-			firstClass: 'first',
-			pageClass: 'page',
-			activeClass: 'active',
-			disabledClass: 'disabled'
-
-			});
-
-			});
-			</script>
 
 	</body>
 </html>
