@@ -4246,6 +4246,7 @@ input, select, textarea {
 		margin: 0 0 2rem 2px;
 		padding: 0;
 		text-align: center;
+		align: center;
 	}
 
 		.pagination a {
