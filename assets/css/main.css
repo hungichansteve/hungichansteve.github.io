@@ -3817,6 +3817,7 @@ input, select, textarea {
 				-ms-flex: 2;
 			}
 
+
 			.wrapper.spotlight:nth-child(2n - 1) .inner {
 				-moz-flex-direction: row-reverse;
 				-webkit-flex-direction: row-reverse;
