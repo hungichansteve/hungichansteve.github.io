@@ -2806,7 +2806,7 @@ input, select, textarea {
 	}
 
 	.pagination a {
-		color: #212931 !important;
+		color: #ffffff !important;
 	}
 
 		.pagination a:hover {
@@ -2821,7 +2821,7 @@ input, select, textarea {
 			}
 
 		.pagination a.active {
-			background-color: #eeeeee;
+			background-color: #999999;
 		}
 
 	.pagination span {
