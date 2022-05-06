@@ -4232,7 +4232,7 @@ input, select, textarea {
 	}
 
 /* Pagination */
-	.pagination {
+	#pagination {
 		display: -moz-inline-flex;
 		display: -webkit-inline-flex;
 		display: -ms-inline-flex;
@@ -4249,7 +4249,7 @@ input, select, textarea {
 		align: center;
 	}
 
-		.pagination a {
+		#pagination a {
 			-moz-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
 			-webkit-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
 			-ms-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
@@ -4286,26 +4286,23 @@ input, select, textarea {
 
 		}
 
-	.pagination a, .pagination span {
+	#pagination a {
 		border-color: #eeeeee;
-	}
-
-	.pagination a {
 		color: #ffffff !important;
 	}
 
-		.pagination a:hover {
+		#pagination a:hover {
 			color: #18bfef !important;
 			border-color: #18bfef;
 			z-index: 1;
 		}
 
-			.pagination a:hover + a,
-			.pagination a:hover {
+			#pagination a:hover + a,
+			#pagination a:hover {
 				border-left-color: #18bfef;
 			}
 
-		.pagination a.active {
+		#pagination a.active {
 			background-color: #999999;
 		}
 
