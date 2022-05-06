@@ -4087,33 +4087,30 @@ input, select, textarea {
 			width: calc(50% - 1.5em);
 		}
 		
-		#footer .pagination a, #footer .pagination span {
+		#footer #pagination a {
 			border-color: #e2e2e2;
 		}
 
-		#footer .pagination a {
+		#footer #pagination a {
 			color: #ffffff !important;
+			text-align: center;
 		}
 
-			#footer .pagination a:hover {
+			#footer #pagination a:hover {
 				color: #18bfef !important;
 				border-color: #18bfef;
 				z-index: 1;
 			}
 
-				#footer .pagination a:hover + a,
-				#footer .pagination a:hover + span {
+				#footer #pagination a:hover + a,
+				#footer #pagination a:hover + span {
 					border-left-color: #18bfef;
 				}
 
-			#footer .pagination a.active {
+			#footer #pagination a.active {
 				background-color: #e2e2e2;
 			}
 
-		#footer .pagination span {
-			color: #ffffff;
-		}
-		
 		#footer .inner .copyright {
 			border-top: solid 2px rgba(255, 255, 255, 0.125);
 			list-style: none;
