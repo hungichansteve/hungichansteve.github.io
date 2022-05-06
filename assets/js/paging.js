@@ -1,42 +1,10 @@
-$('#pagination-demo').twbsPagination({
-  totalPages: 5,
-  // the current page that show on start
-  startPage: 1,
-
-  // maximum visible pages
-  visiblePages: 5,
-
-  initiateStartPageClick: true,
-
-  // template for pagination links
-  href: false,
-
-  // variable name in href template for page number
-  hrefVariable: '{{number}}',
-
-  // Text labels
-  first: 'First',
-  prev: 'Previous',
-  next: 'Next',
-  last: 'Last',
-
-  // carousel-style pagination
-  loop: false,
-
-  // callback function
-  onPageClick: function (event, page) {
-    $('.page-active').removeClass('page-active');
-    $('#page'+page).addClass('page-active');
-  },
-
-  // pagination Classes
-  paginationClass: 'pagination',
-  nextClass: 'next',
-  prevClass: 'prev',
-  lastClass: 'last',
-  firstClass: 'first',
-  pageClass: 'page',
-  activeClass: 'active',
-  disabledClass: 'disabled'
-
-});
+// Add active class to the current button (highlight it)
+var header = document.getElementById("pagination");
+var btns = header.getElementsByClassName("page");
+for (var i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function() {
+  var current = document.getElementsByClassName("active");
+  current[0].className = current[0].className.replace(" active", "");
+  this.className += " active";
+  });
+}
