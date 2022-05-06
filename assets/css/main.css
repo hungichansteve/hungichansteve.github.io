@@ -4087,29 +4087,6 @@ input, select, textarea {
 			width: calc(50% - 1.5em);
 		}
 		
-		#footer #pagination a {
-			border-color: #e2e2e2;
-		}
-
-		#footer #pagination a {
-			color: #ffffff !important;
-			text-align: center;
-		}
-
-			#footer #pagination a:hover {
-				color: #18bfef !important;
-				border-color: #18bfef;
-				z-index: 1;
-			}
-
-				#footer #pagination a:hover + a,
-				#footer #pagination a:hover + span {
-					border-left-color: #18bfef;
-				}
-
-			#footer #pagination a.active {
-				background-color: #e2e2e2;
-			}
 
 		#footer .inner .copyright {
 			border-top: solid 2px rgba(255, 255, 255, 0.125);
@@ -4243,8 +4220,7 @@ input, select, textarea {
 		margin: 0 0 2rem 2px;
 		padding: 0;
 		text-align: center;
-		align: center;
-	}
+}
 
 		#pagination a {
 			-moz-transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
@@ -4271,6 +4247,7 @@ input, select, textarea {
 
 			.pagination a, .pagination span {
 				font-size: 0.9rem;
+				text-align: center;
 			}
 
 		}
@@ -4279,6 +4256,7 @@ input, select, textarea {
 
 			.pagination .page, .pagination .extra {
 				display: none;
+				text-align: center;
 			}
 
 		}
@@ -4286,21 +4264,25 @@ input, select, textarea {
 	#pagination a {
 		border-color: #eeeeee;
 		color: #ffffff !important;
+		text-align: center;
 	}
 
 		#pagination a:hover {
 			color: #18bfef !important;
 			border-color: #18bfef;
 			z-index: 1;
+			text-align: center;
 		}
 
 			#pagination a:hover + a,
 			#pagination a:hover {
 				border-left-color: #18bfef;
+				text-align: center;
 			}
 
 		#pagination a.active {
 			background-color: #999999;
+			text-align: center;
 		}
 
 
