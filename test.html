@@ -6,44 +6,43 @@
     <title>Time Dice Game</title>
     <style>
         body { 
-            background-color: #1a1a1a; 
+            background-color: #E3F2FD; /* Soft Light Blue */
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
             height: 100vh; 
             margin: 0; 
-            font-family: 'Courier New', Courier, monospace; 
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif; 
         }
         h1 {
-            color: #ffffff;
+            color: #1565C0; /* Deep Blue */
             margin-bottom: 20px;
             font-size: 3rem;
             text-align: center;
         }
         .clock-display { 
-            font-size: 15vw; /* Scales with iPad screen width */
-            color: #00ff41; 
-            background: #000; 
+            font-size: 15vw; 
+            color: #1565C0; 
+            background: #FFFFFF; /* White clock face */
             padding: 30px 60px; 
-            border-radius: 20px; 
-            border: 6px solid #333;
+            border-radius: 25px; 
+            border: 8px solid #FFCA28; /* Bright Yellow border */
             letter-spacing: 10px;
-            text-shadow: 0 0 30px #00ff41;
-            margin: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         button { 
             margin-top: 50px; 
             padding: 30px 80px; 
             font-size: 2.5rem; 
-            background: #ff3e3e; 
+            background: #4CAF50; /* Cheerful Green */
             color: white; 
             border: none; 
             border-radius: 50px; 
             cursor: pointer; 
-            box-shadow: 0 15px #b30000;
+            box-shadow: 0 10px #2E7D32;
         }
-        button:active { box-shadow: 0 5px #b30000; transform: translateY(10px); }
+        button:active { box-shadow: 0 5px #2E7D32; transform: translateY(5px); }
     </style>
 </head>
 <body>
@@ -56,11 +55,14 @@
 
     <script>
         function roll() {
-            // Audio Feedback
+            // Audio Feedback (Softer "ping")
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = ctx.createOscillator();
-            osc.connect(ctx.destination);
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
             osc.frequency.setValueAtTime(880, ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
             osc.start();
             osc.stop(ctx.currentTime + 0.1);
 
