@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Festival Fun Spinner</title>
+    <style>
+        body { 
+            background-color: #FFF9C4; /* Soft warm yellow */
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif; 
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        h1 {
+            color: #E65100; /* Deep festive orange */
+            margin: 15px 0;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+        /* Wheel Pointer */
+        .wheel-wrapper {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; 
+            height: 0; 
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #D32F2F; /* Red arrow pointing down */
+            z-index: 10;
+        }
+        canvas { 
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: transform 3s cubic-bezier(0.1, 0.8, 0.2, 1);
+        }
+        /* Activity Scroller */
+        .scroller-box {
+            width: 320px;
+            height: 80px;
+            background: #FFFFFF;
+            border: 6px solid #FFB300;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.1);
+        }
+        .scroller-container {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            transition: top 2s cubic-bezier(0.1, 0.8, 0.2, 1);
+        }
+        .scroller-item {
+            height: 80px;
+            line-height: 80px;
+            text-align: center;
+            font-size: 1.4rem;
+            color: #333333;
+            font-weight: bold;
+        }
+        /* Spin Button */
+        button { 
+            padding: 15px 60px; 
+            font-size: 2rem; 
+            background: #4CAF50; /* Cheerful Green */
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            box-shadow: 0 10px #2E7D32;
+            font-family: inherit;
+        }
+        button:active { 
+            box-shadow: 0 4px #2E7D32; 
+            transform: translateY(6px); 
+        }
+        button:disabled {
+            background: #BDBDBD;
+            box-shadow: 0 6px #9E9E9E;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Festival Fun Spinner!</h1>
+    
+    <div class="game-container">
+        <div class="wheel-wrapper">
+            <div class="pointer"></div>
+            <canvas id="wheelCanvas" width="300" height="300"></canvas>
+        </div>
+
+        <div class="scroller-box">
+            <div class="scroller-container" id="scroller">
+                <!-- JavaScript generates items here -->
+            </div>
+        </div>
+
+        <button id="spinBtn" onclick="startSequence()">SPIN!</button>
+    </div>
+
+    <script>
+        const festivals = [
+            { name: "Chinese New Year", activity: "🧧 Get Red Packets!" },
+            { name: "Mid-Autumn", activity: "🥮 Eat Mooncakes!" },
+            { name: "Dragon-boat", activity: "🐉 Race Dragon Boats!" },
+            { name: "Christmas", activity: "🎄 Open Presents!" }
+        ];
+
+        // Bright colors for sections
+        const colors = ["#FF5722", "#4CAF50", "#2196F3", "#9C27B0"];
+        
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const scroller = document.getElementById('scroller');
+        const spinBtn = document.getElementById('spinBtn');
+
+        let currentRotation = 0;
+        let allActivities = [];
+
+        // 1. Draw the Wheel
+        function drawWheel() {
+            const numSegments = festivals.length;
+            const anglePerSegment = (2 * Math.PI) / numSegments;
+            const radius = canvas.width / 2;
+
+            for (let i = 0; i < numSegments; i++) {
+                const startAngle = i * anglePerSegment - (Math.PI / 2);
+                const endAngle = startAngle + anglePerSegment;
+
+                ctx.beginPath();
+                ctx.moveTo(radius, radius);
+                ctx.arc(radius, radius, radius, startAngle, endAngle);
+                ctx.fillStyle = colors[i];
+                ctx.fill();
+                ctx.stroke();
+
+                // Add text labels
+                ctx.save();
+                ctx.translate(radius, radius);
+                ctx.rotate(startAngle + anglePerSegment / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#FFFFFF";
+                ctx.font = "bold 1.1rem Arial";
+                ctx.fillText(festivals[i].name, radius - 20, 5);
+                ctx.restore();
+            }
+        }
+
+        // 2. Setup the Activities Slot Machine Scroller
+        function buildScroller() {
+            scroller.innerHTML = '';
+            // Create a long list combining multiple copies of activities for a rolling visual effect
+            allActivities = [];
+            for (let r = 0; r < 5; r++) {
+                festivals.forEach(f => allActivities.push(f.activity));
+            }
+            
+            allActivities.forEach(act => {
+                const item = document.createElement('div');
+                item.className = 'scroller-item';
+                item.innerText = act;
+                scroller.appendChild(item);
+            });
+            scroller.style.top = "0px";
+        }
+
+        // 3. Audio Effects (Plays dynamic clicking sound during spinning)
+        function playTickSound(duration) {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let startTime = audioCtx.currentTime;
+            let tickDelay = 50; // Milliseconds between ticks initially
+
+            function nextTick() {
+                if (audioCtx.currentTime - startTime > duration / 1000) return;
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime); // High block click
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.02);
+
+                tickDelay += 15; // Slow down the ticking sound over time
+                setTimeout(nextTick, tickDelay);
+            }
+            nextTick();
+        }
+
+        // 4. Main Sequence
+        function startSequence() {
+            spinBtn.disabled = true;
+            
+            // Set up clean scroller state before animation
+            scroller.style.transition = "none";
+            scroller.style.top = "0px";
+            
+            // Generate a random outcome index (0 to 3)
+            const prizeIndex = Math.floor(Math.random() * festivals.length);
+            
+            // Sound duration matching the spin action
+            playTickSound(3000);
+
+            // Wheel Spin Configuration
+            const degreesPerSegment = 360 / festivals.length;
+            const extraSpins = 3 * 360; // 3 full loops before landing
+            
+            // Align chosen slice directly underneath the red pointer (top center = 270 degrees)
+            const targetAngle = 270 - (prizeIndex * degreesPerSegment) - (degreesPerSegment / 2);
+            currentRotation += extraSpins + (targetAngle - (currentRotation % 360));
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            // Wait until the wheel stops, then initiate the matching activity scroller
+            setTimeout(() => {
+                const itemHeight = 80;
+                
+                // Find where the correct answer lives toward the bottom of our extended scroller pool
+                const targetRow = (festivals.length * 3) + prizeIndex; 
+                const finalScrollPosition = targetRow * itemHeight;
+
+                scroller.style.transition = "top 2s cubic-bezier(0.1, 0.8, 0.2, 1)";
+                scroller.style.top = `-${finalScrollPosition}px`;
+
+                // Re-enable button after the entire sequence finishes
+                setTimeout(() => {
+                    spinBtn.disabled = false;
+                }, 2100);
+
+            }, 3000);
+        }
+
+        // Start initialization on page render
+        drawWheel();
+        buildScroller();
+    </script>
+</body>
+</html>
