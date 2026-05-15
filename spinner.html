@@ -29,13 +29,13 @@
             align-items: center;
             gap: 20px;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
         }
         /* Wheel Pointer */
         .wheel-wrapper {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 360px;
+            height: 360px;
         }
         .pointer {
             position: absolute;
@@ -56,7 +56,7 @@
         }
         /* Activity Scroller */
         .scroller-box {
-            width: 340px;
+            width: 360px;
             height: 80px;
             background: #FFFFFF;
             border: 6px solid #FFB300;
@@ -75,7 +75,7 @@
             height: 80px;
             line-height: 80px;
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: #333333;
             font-weight: bold;
         }
@@ -109,7 +109,7 @@
     <div class="game-container">
         <div class="wheel-wrapper">
             <div class="pointer"></div>
-            <canvas id="wheelCanvas" width="300" height="300"></canvas>
+            <canvas id="wheelCanvas" width="360" height="360"></canvas>
         </div>
 
         <div class="scroller-box">
@@ -122,7 +122,7 @@
     </div>
 
     <script>
-        // Structured data mapping accurate festival-specific activities
+        // Five distinct festivals with culturally relevant primary school activities
         const festivalData = [
             { 
                 name: "Chinese New Year", 
@@ -139,10 +139,15 @@
             { 
                 name: "Christmas", 
                 activities: ["🎄 Decorate the Tree!", "🎁 Open Presents!", "🦌 See Santa Claus!", "🎶 Sing Christmas Carols!"] 
+            },
+            {
+                name: "Easter",
+                activities: ["🥚 Hunt for Easter Eggs!", "🎨 Paint Egg Shells!", "🐰 See the Easter Bunny!", "🍫 Eat Chocolate Eggs!"]
             }
         ];
 
-        const colors = ["#FF5722", "#4CAF50", "#2196F3", "#9C27B0"];
+        // 5 vibrant colors matching the 5 segments
+        const colors = ["#FF5722", "#4CAF50", "#2196F3", "#9C27B0", "#FF9800"];
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
         const scroller = document.getElementById('scroller');
@@ -155,27 +160,45 @@
             const anglePerSegment = (2 * Math.PI) / numSegments;
             const radius = canvas.width / 2;
 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             for (let i = 0; i < numSegments; i++) {
                 const startAngle = i * anglePerSegment - (Math.PI / 2);
                 const endAngle = startAngle + anglePerSegment;
 
+                // Draw the pie slice
                 ctx.beginPath();
                 ctx.moveTo(radius, radius);
                 ctx.arc(radius, radius, radius, startAngle, endAngle);
                 ctx.fillStyle = colors[i];
                 ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "#FFFFFF";
                 ctx.stroke();
 
+                // Draw text horizontally inside the slice so it fits easily
                 ctx.save();
                 ctx.translate(radius, radius);
+                // Rotate to the middle of the current slice
                 ctx.rotate(startAngle + anglePerSegment / 2);
-                ctx.textAlign = "right";
+                
+                // Move text outward toward the rim, then flip it horizontal to read comfortably
+                ctx.translate(radius * 0.65, 0);
+                ctx.rotate(-(startAngle + anglePerSegment / 2) - currentRotation * Math.PI / 180); 
+                
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
                 ctx.fillStyle = "#FFFFFF";
                 ctx.font = "bold 1.1rem Arial";
-                ctx.fillText(festivalData[i].name, radius - 15, 5);
+                
+                // Wrap text if needed, or just let it print clean and flat
+                ctx.fillText(festivalData[i].name, 0, 0);
                 ctx.restore();
             }
         }
+
+        // Keep the text upright even when rotating the wheel canvas
+        canvas.style.transition = "transform 3s cubic-bezier(0.1, 0.8, 0.2, 1)";
 
         function playTickSound(duration) {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -205,39 +228,40 @@
         function startSequence() {
             spinBtn.disabled = true;
             
-            // Instantly reset the scroller block back to a blank/neutral starting state
+            // Instantly clear the scroller element to reset state
             scroller.style.transition = "none";
             scroller.style.top = "0px";
             scroller.innerHTML = '<div class="scroller-item">Choosing activity...</div>';
             
-            // Determine the final landing sector (0 to 3)
+            // Randomly pick our winning festival (0 to 4)
             const targetFestivalIndex = Math.floor(Math.random() * festivalData.length);
             
             playTickSound(3000);
 
-            // Compute physics rotation to point arrow precisely at the selected slice
             const degreesPerSegment = 360 / festivalData.length;
             const extraSpins = 3 * 360; 
+            
+            // Math equation calculating exact landing rotation coordinates to face the top pointer arrow
             const targetAngle = 270 - (targetFestivalIndex * degreesPerSegment) - (degreesPerSegment / 2);
             
             currentRotation += extraSpins + (targetAngle - (currentRotation % 360));
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-            // Wait 3 seconds for the wheel animation to cease completely
+            // Wait 3 seconds for the spinner wheel to come to a full stop
             setTimeout(() => {
                 const targetData = festivalData[targetFestivalIndex];
                 const pool = targetData.activities;
                 
-                // Select a dynamic single random activity from the specific sub-pool array
+                // Pick one specific correct activity out of the array matching the target festival
                 const chosenActivityIndex = Math.floor(Math.random() * pool.length);
                 
-                // Build a loop-illusion row array containing ONLY matching activities for this festival
+                // Build a slot machine illusion using ONLY matching activities for this festival
                 let scrollItemsPool = [];
                 for (let r = 0; r < 4; r++) {
                     pool.forEach(act => scrollItemsPool.push(act));
                 }
 
-                // Append the constructed item blocks to DOM
+                // Inject the updated matching data into the html scroller layout
                 scroller.innerHTML = '';
                 scrollItemsPool.forEach(actText => {
                     const div = document.createElement('div');
@@ -246,18 +270,18 @@
                     scroller.appendChild(div);
                 });
 
-                // Calculate vertical distance offset
                 const rowHeight = 80;
+                // Position the selector index frame near the bottom of our looped item chain
                 const finalTargetRow = (pool.length * 2) + chosenActivityIndex;
                 const finalScrollPosition = finalTargetRow * rowHeight;
 
-                // Animate the slot machine container scrolling down to the result
+                // Execute the slot machine glide downward animation
                 setTimeout(() => {
                     scroller.style.transition = "top 2.5s cubic-bezier(0.1, 0.8, 0.2, 1)";
                     scroller.style.top = `-${finalScrollPosition}px`;
                 }, 50);
 
-                // Re-enable interactive trigger once rolling ceases safely
+                // Safe lockout delay window before allowing the user to tap spin again
                 setTimeout(() => {
                     spinBtn.disabled = false;
                 }, 2600);
@@ -270,3 +294,4 @@
     </script>
 </body>
 </html>
+
