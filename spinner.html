@@ -19,7 +19,7 @@
         }
         h1 {
             color: #E65100; /* Deep festive orange */
-            margin: 15px 0;
+            margin: 10px 0;
             font-size: 2.5rem;
             text-align: center;
         }
@@ -27,15 +27,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
         }
         /* Wheel Pointer */
         .wheel-wrapper {
             position: relative;
-            width: 360px;
-            height: 360px;
+            width: 280px;
+            height: 280px;
+            margin-bottom: 10px;
         }
         .pointer {
             position: absolute;
@@ -54,9 +55,25 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             transition: transform 3s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
+        /* Result Display Box */
+        .result-banner {
+            width: 340px;
+            background: #1565C0;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 12px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         /* Activity Scroller */
         .scroller-box {
-            width: 360px;
+            width: 340px;
             height: 80px;
             background: #FFFFFF;
             border: 6px solid #FFB300;
@@ -75,12 +92,13 @@
             height: 80px;
             line-height: 80px;
             text-align: center;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             color: #333333;
             font-weight: bold;
         }
         /* Spin Button */
         button { 
+            margin-top: 10px;
             padding: 15px 60px; 
             font-size: 2rem; 
             background: #4CAF50; 
@@ -107,14 +125,19 @@
     <h1>Festival Fun Spinner!</h1>
     
     <div class="game-container">
+        <!-- Colorful Board-Game Style Spinner Wheel -->
         <div class="wheel-wrapper">
             <div class="pointer"></div>
-            <canvas id="wheelCanvas" width="360" height="360"></canvas>
+            <canvas id="wheelCanvas" width="280" height="280"></canvas>
         </div>
 
+        <!-- Displays the Drawn Festival cleanly with no text cut-offs -->
+        <div class="result-banner" id="festivalDisplay">Ready to Spin!</div>
+
+        <!-- Activity Slot Scroller Box -->
         <div class="scroller-box">
             <div class="scroller-container" id="scroller">
-                <div class="scroller-item">Spin the wheel first!</div>
+                <div class="scroller-item">🎯 Waiting for activity...</div>
             </div>
         </div>
 
@@ -122,18 +145,18 @@
     </div>
 
     <script>
-        // Five distinct festivals with culturally relevant primary school activities
-        const festivalData = [
+        // Strictly matched dictionary linking the exact index to its clean names and activities
+        const festivalDatabase = [
             { 
                 name: "Chinese New Year", 
                 activities: ["🧧 Get Red Packets!", "🦁 Watch Lion Dances!", "🧹 Do General Cleaning!", "🥟 Eat Rice Cakes!"] 
             },
             { 
-                name: "Mid-Autumn", 
+                name: "Mid-Autumn Festival", 
                 activities: ["🥮 Eat Mooncakes!", "🏮 Carry Lanterns!", "🌕 Watch the Full Moon!", "🧩 Solve Lantern Riddles!"] 
             },
             { 
-                name: "Dragon-boat", 
+                name: "Dragon-boat Festival", 
                 activities: ["🐉 Race Dragon Boats!", "🍃 Eat Zongzi Dumplings!", "🌾 Hang Mugwort Leaves!", "🌊 Swim in Dragon Water!"] 
             },
             { 
@@ -146,59 +169,48 @@
             }
         ];
 
-        // 5 vibrant colors matching the 5 segments
+        // 5 distinct colors for the 5 wheel segments
         const colors = ["#FF5722", "#4CAF50", "#2196F3", "#9C27B0", "#FF9800"];
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
         const scroller = document.getElementById('scroller');
+        const festivalDisplay = document.getElementById('festivalDisplay');
         const spinBtn = document.getElementById('spinBtn');
 
         let currentRotation = 0;
 
+        // Draw a clean color-wheel spinner
         function drawWheel() {
-            const numSegments = festivalData.length;
+            const numSegments = festivalDatabase.length;
             const anglePerSegment = (2 * Math.PI) / numSegments;
             const radius = canvas.width / 2;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             for (let i = 0; i < numSegments; i++) {
                 const startAngle = i * anglePerSegment - (Math.PI / 2);
                 const endAngle = startAngle + anglePerSegment;
 
-                // Draw the pie slice
                 ctx.beginPath();
                 ctx.moveTo(radius, radius);
                 ctx.arc(radius, radius, radius, startAngle, endAngle);
                 ctx.fillStyle = colors[i];
                 ctx.fill();
-                ctx.lineWidth = 2;
+                
+                // Segment borders
+                ctx.lineWidth = 4;
                 ctx.strokeStyle = "#FFFFFF";
                 ctx.stroke();
 
-                // Draw text horizontally inside the slice so it fits easily
+                // Draw a small distinct white circle on the rim edge of each slice to show progress
                 ctx.save();
                 ctx.translate(radius, radius);
-                // Rotate to the middle of the current slice
                 ctx.rotate(startAngle + anglePerSegment / 2);
-                
-                // Move text outward toward the rim, then flip it horizontal to read comfortably
-                ctx.translate(radius * 0.65, 0);
-                ctx.rotate(-(startAngle + anglePerSegment / 2) - currentRotation * Math.PI / 180); 
-                
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
+                ctx.beginPath();
+                ctx.arc(radius - 25, 0, 8, 0, 2 * Math.PI);
                 ctx.fillStyle = "#FFFFFF";
-                ctx.font = "bold 1.1rem Arial";
-                
-                // Wrap text if needed, or just let it print clean and flat
-                ctx.fillText(festivalData[i].name, 0, 0);
+                ctx.fill();
                 ctx.restore();
             }
         }
-
-        // Keep the text upright even when rotating the wheel canvas
-        canvas.style.transition = "transform 3s cubic-bezier(0.1, 0.8, 0.2, 1)";
 
         function playTickSound(duration) {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -219,7 +231,7 @@
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.02);
 
-                tickDelay += 15; 
+                tickDelay += 16; 
                 setTimeout(nextTick, tickDelay);
             }
             nextTick();
@@ -228,40 +240,45 @@
         function startSequence() {
             spinBtn.disabled = true;
             
-            // Instantly clear the scroller element to reset state
+            // Clear interfaces to reset game state safely
+            festivalDisplay.style.background = "#1565C0";
+            festivalDisplay.innerText = "Spinning...";
             scroller.style.transition = "none";
             scroller.style.top = "0px";
-            scroller.innerHTML = '<div class="scroller-item">Choosing activity...</div>';
+            scroller.innerHTML = '<div class="scroller-item">⏳ Waiting for wheel...</div>';
             
-            // Randomly pick our winning festival (0 to 4)
-            const targetFestivalIndex = Math.floor(Math.random() * festivalData.length);
+            // Determine our exact landing index value safely (0 to 4)
+            const targetIndex = Math.floor(Math.random() * festivalDatabase.length);
             
             playTickSound(3000);
 
-            const degreesPerSegment = 360 / festivalData.length;
+            const degreesPerSegment = 360 / festivalDatabase.length;
             const extraSpins = 3 * 360; 
             
-            // Math equation calculating exact landing rotation coordinates to face the top pointer arrow
-            const targetAngle = 270 - (targetFestivalIndex * degreesPerSegment) - (degreesPerSegment / 2);
+            // Mathematical calculations to align the color slice matching our target index directly to the top pointer
+            const targetAngle = 270 - (targetIndex * degreesPerSegment) - (degreesPerSegment / 2);
             
             currentRotation += extraSpins + (targetAngle - (currentRotation % 360));
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-            // Wait 3 seconds for the spinner wheel to come to a full stop
+            // Sequence Part 2: Activates automatically when the spinner wheel stops moving
             setTimeout(() => {
-                const targetData = festivalData[targetFestivalIndex];
-                const pool = targetData.activities;
+                // Instantly print out the verified match name to our banner
+                const matchedFestival = festivalDatabase[targetIndex];
+                festivalDisplay.innerText = "🎉 " + matchedFestival.name + "!";
+                festivalDisplay.style.background = "#E65100"; // Pop color change
+
+                // Isolate the matching array pool explicitly
+                const activityPool = matchedFestival.activities;
+                const chosenActivityIndex = Math.floor(Math.random() * activityPool.length);
                 
-                // Pick one specific correct activity out of the array matching the target festival
-                const chosenActivityIndex = Math.floor(Math.random() * pool.length);
-                
-                // Build a slot machine illusion using ONLY matching activities for this festival
+                // Build a slot loop containing ONLY correct activities for this festival
                 let scrollItemsPool = [];
                 for (let r = 0; r < 4; r++) {
-                    pool.forEach(act => scrollItemsPool.push(act));
+                    activityPool.forEach(act => scrollItemsPool.push(act));
                 }
 
-                // Inject the updated matching data into the html scroller layout
+                // Push items inside the HTML DOM structure safely
                 scroller.innerHTML = '';
                 scrollItemsPool.forEach(actText => {
                     const div = document.createElement('div');
@@ -271,27 +288,25 @@
                 });
 
                 const rowHeight = 80;
-                // Position the selector index frame near the bottom of our looped item chain
-                const finalTargetRow = (pool.length * 2) + chosenActivityIndex;
+                const finalTargetRow = (activityPool.length * 2) + chosenActivityIndex;
                 const finalScrollPosition = finalTargetRow * rowHeight;
 
-                // Execute the slot machine glide downward animation
+                // Fire the scroll action glide animation
                 setTimeout(() => {
-                    scroller.style.transition = "top 2.5s cubic-bezier(0.1, 0.8, 0.2, 1)";
+                    scroller.style.transition = "top 2.2s cubic-bezier(0.1, 0.8, 0.2, 1)";
                     scroller.style.top = `-${finalScrollPosition}px`;
                 }, 50);
 
-                // Safe lockout delay window before allowing the user to tap spin again
+                // Lift the system interaction lockout
                 setTimeout(() => {
                     spinBtn.disabled = false;
-                }, 2600);
+                }, 2300);
 
             }, 3000);
         }
 
-        // Initialize display
+        // Run rendering logic
         drawWheel();
     </script>
 </body>
 </html>
-
