@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Festival Fun Spinner</title>
+    <title>Festival Lucky Draw!</title>
     <style>
         body { 
             background-color: #FFF9C4; /* Soft warm yellow */
@@ -20,8 +20,9 @@
         h1 {
             color: #E65100; /* Deep festive orange */
             margin: 10px 0;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             text-align: center;
+            text-shadow: 2px 2px 0px #FFF;
         }
         .game-container {
             display: flex;
@@ -36,7 +37,7 @@
             position: relative;
             width: 280px;
             height: 280px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         .pointer {
             position: absolute;
@@ -49,29 +50,42 @@
             border-right: 15px solid transparent;
             border-top: 30px solid #D32F2F;
             z-index: 10;
+            filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.2));
         }
         canvas { 
             border-radius: 50%;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             transition: transform 3s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
-        /* Result Display Box */
+        /* Animated Lucky Draw Banner */
         .result-banner {
             width: 340px;
-            background: #1565C0;
             color: white;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: bold;
             text-align: center;
-            padding: 12px 0;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            min-height: 40px;
+            padding: 15px 0;
+            border-radius: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            min-height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
+            letter-spacing: 1px;
+            /* Default Idle Animation (Rainbow Shift) */
+            background: linear-gradient(270deg, #ff5722, #4caf50, #2196f3, #9c27b0);
+            background-size: 800% 800%;
+            animation: rainbow-idle 6s ease infinite;
         }
-        /* Activity Scroller */
+        /* Victory Shine Animation */
+        .result-banner.victory {
+            background: #FFD700 !important; /* Gold */
+            color: #000000 !important;
+            animation: victory-glow 0.3s linear infinite !important;
+            border: 4px dashed #FF5722;
+            box-sizing: border-box;
+        }
+        /* Activity Scroller Box */
         .scroller-box {
             width: 340px;
             height: 80px;
@@ -80,7 +94,7 @@
             border-radius: 20px;
             overflow: hidden;
             position: relative;
-            box-shadow: inset 0 5px 10px rgba(0,0,0,0.1);
+            box-shadow: inset 0 6px 12px rgba(0,0,0,0.15);
         }
         .scroller-container {
             position: absolute;
@@ -92,60 +106,77 @@
             height: 80px;
             line-height: 80px;
             text-align: center;
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             color: #333333;
             font-weight: bold;
         }
-        /* Spin Button */
+        /* Massive Arcade Styled Tap Button */
         button { 
             margin-top: 10px;
-            padding: 15px 60px; 
-            font-size: 2rem; 
-            background: #4CAF50; 
+            width: 120px;
+            height: 120px;
+            font-size: 1.5rem; 
+            font-weight: bold;
+            background: #FF3D00; 
             color: white; 
-            border: none; 
-            border-radius: 50px; 
+            border: 8px solid #FFF;
+            border-radius: 50%; 
             cursor: pointer; 
-            box-shadow: 0 10px #2E7D32;
+            box-shadow: 0 10px 0px #BF360C, 0 15px 20px rgba(0,0,0,0.3);
             font-family: inherit;
+            transition: transform 0.05s ease;
         }
         button:active { 
-            box-shadow: 0 4px #2E7D32; 
-            transform: translateY(6px); 
+            box-shadow: 0 3px 0px #BF360C, 0 5px 10px rgba(0,0,0,0.3); 
+            transform: translateY(7px); 
         }
         button:disabled {
             background: #BDBDBD;
-            box-shadow: 0 6px #9E9E9E;
+            border-color: #E0E0E0;
+            box-shadow: 0 6px 0px #9E9E9E;
             cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ANIMATION KEYFRAMES */
+        @keyframes rainbow-idle {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
+        @keyframes victory-glow {
+            0% { background-color: #FFD700; filter: brightness(1); }
+            50% { background-color: #FFEA00; filter: brightness(1.3); box-shadow: 0 0 25px #FFEA00; }
+            100% { background-color: #FFD700; filter: brightness(1); }
         }
     </style>
 </head>
 <body>
 
-    <h1>Festival Fun Spinner!</h1>
+    <h1>🌟 LUCKY DRAW! 🌟</h1>
     
     <div class="game-container">
-        <!-- Colorful Board-Game Style Spinner Wheel -->
+        <!-- Arcade Spinner -->
         <div class="wheel-wrapper">
             <div class="pointer"></div>
             <canvas id="wheelCanvas" width="280" height="280"></canvas>
         </div>
 
-        <!-- Displays the Drawn Festival cleanly with no text cut-offs -->
-        <div class="result-banner" id="festivalDisplay">Ready to Spin!</div>
+        <!-- Attract Banner (Animates smoothly continuously) -->
+        <div class="result-banner" id="festivalDisplay">🎁 SPIN ME! 🎁</div>
 
-        <!-- Activity Slot Scroller Box -->
+        <!-- Activity Slot Window -->
         <div class="scroller-box">
             <div class="scroller-container" id="scroller">
-                <div class="scroller-item">🎯 Waiting for activity...</div>
+                <div class="scroller-item">❓ What will you get?</div>
             </div>
         </div>
 
-        <button id="spinBtn" onclick="startSequence()">SPIN!</button>
+        <!-- Round Red Target Arcade Button -->
+        <button id="spinBtn" onclick="startSequence()">TAP<br>HERE!</button>
     </div>
 
     <script>
-        // Strictly matched dictionary linking the exact index to its clean names and activities
         const festivalDatabase = [
             { 
                 name: "Chinese New Year", 
@@ -169,7 +200,6 @@
             }
         ];
 
-        // 5 distinct colors for the 5 wheel segments
         const colors = ["#FF5722", "#4CAF50", "#2196F3", "#9C27B0", "#FF9800"];
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
@@ -179,7 +209,6 @@
 
         let currentRotation = 0;
 
-        // Draw a clean color-wheel spinner
         function drawWheel() {
             const numSegments = festivalDatabase.length;
             const anglePerSegment = (2 * Math.PI) / numSegments;
@@ -195,27 +224,27 @@
                 ctx.fillStyle = colors[i];
                 ctx.fill();
                 
-                // Segment borders
-                ctx.lineWidth = 4;
+                ctx.lineWidth = 5;
                 ctx.strokeStyle = "#FFFFFF";
                 ctx.stroke();
 
-                // Draw a small distinct white circle on the rim edge of each slice to show progress
+                // Bright star-dot anchors on the edge to make it look like a carnival game wheel
                 ctx.save();
                 ctx.translate(radius, radius);
                 ctx.rotate(startAngle + anglePerSegment / 2);
                 ctx.beginPath();
-                ctx.arc(radius - 25, 0, 8, 0, 2 * Math.PI);
+                ctx.arc(radius - 20, 0, 7, 0, 2 * Math.PI);
                 ctx.fillStyle = "#FFFFFF";
                 ctx.fill();
                 ctx.restore();
             }
         }
 
+        // Ticking audio generator
         function playTickSound(duration) {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let startTime = audioCtx.currentTime;
-            let tickDelay = 50;
+            let tickDelay = 40; // Quick initial clicks
 
             function nextTick() {
                 if (audioCtx.currentTime - startTime > duration / 1000) return;
@@ -225,60 +254,76 @@
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime); 
+                osc.frequency.setValueAtTime(750, audioCtx.currentTime); // High pitch bright pop
                 gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
                 
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.02);
+                osc.stop(audioCtx.currentTime + 0.015);
 
-                tickDelay += 16; 
+                tickDelay += 18; // Slowly drag out time interval to simulate drag/friction
                 setTimeout(nextTick, tickDelay);
             }
             nextTick();
         }
 
+        // Win fanfare tone structure
+        function playWinFanfare() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 arpeggio chord
+            notes.forEach((freq, index) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }, index * 100);
+            });
+        }
+
         function startSequence() {
             spinBtn.disabled = true;
             
-            // Clear interfaces to reset game state safely
-            festivalDisplay.style.background = "#1565C0";
-            festivalDisplay.innerText = "Spinning...";
+            // Clean/Reset visuals back out of victory state
+            festivalDisplay.classList.remove('victory');
+            festivalDisplay.innerText = "🎰 SPINNING! 🎰";
+            
             scroller.style.transition = "none";
             scroller.style.top = "0px";
-            scroller.innerHTML = '<div class="scroller-item">⏳ Waiting for wheel...</div>';
+            scroller.innerHTML = '<div class="scroller-item">🌀 Waiting...</div>';
             
-            // Determine our exact landing index value safely (0 to 4)
             const targetIndex = Math.floor(Math.random() * festivalDatabase.length);
             
             playTickSound(3000);
 
             const degreesPerSegment = 360 / festivalDatabase.length;
-            const extraSpins = 3 * 360; 
-            
-            // Mathematical calculations to align the color slice matching our target index directly to the top pointer
+            const extraSpins = 4 * 360; // Extra full turns for drama
             const targetAngle = 270 - (targetIndex * degreesPerSegment) - (degreesPerSegment / 2);
             
             currentRotation += extraSpins + (targetAngle - (currentRotation % 360));
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-            // Sequence Part 2: Activates automatically when the spinner wheel stops moving
+            // Sequence triggered when the spinner wheel stops moving
             setTimeout(() => {
-                // Instantly print out the verified match name to our banner
                 const matchedFestival = festivalDatabase[targetIndex];
-                festivalDisplay.innerText = "🎉 " + matchedFestival.name + "!";
-                festivalDisplay.style.background = "#E65100"; // Pop color change
+                
+                // Show text with victory flash shine effect
+                festivalDisplay.innerText = "✨ " + matchedFestival.name.toUpperCase() + " ✨";
+                festivalDisplay.classList.add('victory');
+                playWinFanfare();
 
-                // Isolate the matching array pool explicitly
                 const activityPool = matchedFestival.activities;
                 const chosenActivityIndex = Math.floor(Math.random() * activityPool.length);
                 
-                // Build a slot loop containing ONLY correct activities for this festival
                 let scrollItemsPool = [];
                 for (let r = 0; r < 4; r++) {
                     activityPool.forEach(act => scrollItemsPool.push(act));
                 }
 
-                // Push items inside the HTML DOM structure safely
                 scroller.innerHTML = '';
                 scrollItemsPool.forEach(actText => {
                     const div = document.createElement('div');
@@ -291,22 +336,22 @@
                 const finalTargetRow = (activityPool.length * 2) + chosenActivityIndex;
                 const finalScrollPosition = finalTargetRow * rowHeight;
 
-                // Fire the scroll action glide animation
+                // Move slot machine scroller
                 setTimeout(() => {
-                    scroller.style.transition = "top 2.2s cubic-bezier(0.1, 0.8, 0.2, 1)";
+                    scroller.style.transition = "top 2s cubic-bezier(0.1, 0.8, 0.2, 1)";
                     scroller.style.top = `-${finalScrollPosition}px`;
                 }, 50);
 
-                // Lift the system interaction lockout
+                // Enable button again
                 setTimeout(() => {
                     spinBtn.disabled = false;
-                }, 2300);
+                }, 2100);
 
             }, 3000);
         }
 
-        // Run rendering logic
         drawWheel();
     </script>
 </body>
 </html>
+
