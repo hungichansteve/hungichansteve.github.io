@@ -57,7 +57,7 @@
         }
         /* Kids Theme Display Banner (Toy Ticket Style) */
         .result-banner {
-            width: 480px;
+            width: 360px; /* Reduced from 480px to look much better on iPads */
             color: #1565C0;
             background: #FFFFFF;
             font-size: 1.5rem;
@@ -84,7 +84,7 @@
         /* Clean Activity Window */
         .scroller-box {
             width: 340px;
-            height: 80px;
+            height: 80px; /* Fixed window height */
             background: #FFFFFF;
             border: 5px solid #4FC3F7; /* Friendly light blue border */
             border-radius: 20px;
@@ -100,12 +100,15 @@
             left: 0;
         }
         .scroller-item {
-            height: 70px; /* Aligned for perfect centering */
-            line-height: 70px;
+            height: 80px; /* Synchronized perfectly with the box height to stop overlaps! */
+            line-height: 80px; /* Vertically centers the text perfectly */
             text-align: center;
             font-size: 1.35rem;
             color: #333333;
             font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         /* Fixed Circular Button Container */
         .button-zone {
@@ -208,7 +211,6 @@
 
         let currentRotation = 0;
 
-        // Draws pure, clean color sectors with crisp indicator nodes
         function drawWheel() {
             const numSegments = festivalDatabase.length;
             const anglePerSegment = (2 * Math.PI) / numSegments;
@@ -307,11 +309,11 @@
             setTimeout(() => {
                 const matchedFestival = festivalDatabase[targetIndex];
                 
-                // Displays the pure festival output name cleanly wrapped inside the text prompt layout
                 festivalDisplay.innerText = "🎈 " + matchedFestival.name + " 🎈";
                 festivalDisplay.classList.add('celebrate');
                 playWinFanfare();
 
+                // Placeholder stays clean and clear
                 scroller.innerHTML = '<div class="scroller-item">I like...</div>';
 
                 // Suspense break logic tracking window updates (At 1 additional second)
@@ -334,7 +336,8 @@
                         scroller.appendChild(div);
                     });
 
-                    const rowHeight = 70;
+                    // Adjusted math formula to use the newly unified 80px calculation factor!
+                    const rowHeight = 80;
                     const finalTargetRow = (activityPool.length * 2) + chosenActivityIndex;
                     const finalScrollPosition = finalTargetRow * rowHeight;
 
@@ -356,3 +359,4 @@
     </script>
 </body>
 </html>
+
