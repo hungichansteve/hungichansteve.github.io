@@ -57,7 +57,7 @@
         }
         /* Kids Theme Display Banner (Toy Ticket Style) */
         .result-banner {
-            width: 470px;
+            width: 360px;
             color: #1565C0;
             background: #FFFFFF;
             font-size: 1.5rem;
@@ -169,7 +169,7 @@
             </div>
         </div>
 
-        <!-- Button Zone (Prevents iPad cutoff bugs) -->
+        <!-- Button Zone -->
         <div class="button-zone">
             <button id="spinBtn" onclick="startSequence()">TAP<br>HERE!</button>
         </div>
@@ -208,6 +208,7 @@
 
         let currentRotation = 0;
 
+        // Draws pure, clean color sectors with crisp indicator nodes
         function drawWheel() {
             const numSegments = festivalDatabase.length;
             const anglePerSegment = (2 * Math.PI) / numSegments;
@@ -302,21 +303,19 @@
             currentRotation += extraSpins + (targetAngle - (currentRotation % 360));
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-            // Wheel stops spinning after 3 seconds
+            // Wheel alignment timeline event (At 3 seconds)
             setTimeout(() => {
                 const matchedFestival = festivalDatabase[targetIndex];
                 
-                // Show the chosen festival in the question block
+                // Displays the pure festival output name cleanly wrapped inside the text prompt layout
                 festivalDisplay.innerText = "🎈 What do you like doing at " + matchedFestival.name + "? 🎈";
                 festivalDisplay.classList.add('celebrate');
                 playWinFanfare();
 
-                // Update scroller text to show suspense hint
                 scroller.innerHTML = '<div class="scroller-item">🤔 Think first... (5s)</div>';
 
-                // --- 5 SECOND DELAY FOR KIDS TO THINK/ANSWER ORALLY ---
+                // Suspense break logic tracking window updates (At 5 additional seconds)
                 setTimeout(() => {
-                    // Start the ticker sound again to mimic the slot roll
                     playTickSound(2000);
 
                     const activityPool = matchedFestival.activities;
@@ -339,20 +338,18 @@
                     const finalTargetRow = (activityPool.length * 2) + chosenActivityIndex;
                     const finalScrollPosition = finalTargetRow * rowHeight;
 
-                    // Execute the scroll track glide
                     setTimeout(() => {
                         scroller.style.transition = "top 2s cubic-bezier(0.1, 0.8, 0.2, 1)";
                         scroller.style.top = `-${finalScrollPosition}px`;
                     }, 50);
 
-                    // Re-enable button after the roll finishes completely
                     setTimeout(() => {
                         spinBtn.disabled = false;
                     }, 2100);
 
-                }, 5000); // 5000ms delay window
+                }, 5000);
 
-            }, 3000); // Wheel spin length
+            }, 3000);
         }
 
         drawWheel();
