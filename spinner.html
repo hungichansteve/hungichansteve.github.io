@@ -165,7 +165,7 @@
         <!-- Activity Box -->
         <div class="scroller-box">
             <div class="scroller-container" id="scroller">
-                <div class="scroller-item">❓ I like...</div>
+                <div class="scroller-item">I like...</div>
             </div>
         </div>
 
@@ -286,11 +286,11 @@
             spinBtn.disabled = true;
             
             festivalDisplay.classList.remove('celebrate');
-            festivalDisplay.innerText = "⭐ Spinning the wheel... ⭐";
+            festivalDisplay.innerText = "✨ What do you like doing at...? ✨";
             
             scroller.style.transition = "none";
             scroller.style.top = "0px";
-            scroller.innerHTML = '<div class="scroller-item">💭 Waiting for festival...</div>';
+            scroller.innerHTML = '<div class="scroller-item">I like...</div>';
             
             const targetIndex = Math.floor(Math.random() * festivalDatabase.length);
             
@@ -312,9 +312,9 @@
                 festivalDisplay.classList.add('celebrate');
                 playWinFanfare();
 
-                scroller.innerHTML = '<div class="scroller-item">🤔 Think first... (5s)</div>';
+                scroller.innerHTML = '<div class="scroller-item">I like...</div>';
 
-                // Suspense break logic tracking window updates (At 5 additional seconds)
+                // Suspense break logic tracking window updates (At 1 additional second)
                 setTimeout(() => {
                     playTickSound(2000);
 
@@ -347,7 +347,7 @@
                         spinBtn.disabled = false;
                     }, 2100);
 
-                }, 5000);
+                }, 1000);
 
             }, 3000);
         }
