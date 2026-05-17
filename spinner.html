@@ -60,14 +60,14 @@
             width: 360px;
             color: #1565C0;
             background: #FFFFFF;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: bold;
             text-align: center;
-            padding: 12px 0;
+            padding: 12px 10px;
             border-radius: 20px;
             border: 4px dashed #1565C0;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            min-height: 40px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -160,12 +160,12 @@
         </div>
 
         <!-- Banner -->
-        <div class="result-banner" id="festivalDisplay">✨ Tap below to spin! ✨</div>
+        <div class="result-banner" id="festivalDisplay">✨ What do you like doing at...? ✨</div>
 
         <!-- Activity Box -->
         <div class="scroller-box">
             <div class="scroller-container" id="scroller">
-                <div class="scroller-item">❓ Which activity is next?</div>
+                <div class="scroller-item">❓ I like...</div>
             </div>
         </div>
 
@@ -191,7 +191,7 @@
             },
             { 
                 name: "Christmas", 
-                activities: ["🎁 Get presents!", "🎁 Give presents!", "🌟 Look at the Christmas lights!",] 
+                activities: ["🎁 Get presents!", "🎁 Give presents!", "🌟 Look at the Christmas lights!"] 
             },
             {
                 name: "Easter",
@@ -199,7 +199,6 @@
             }
         ];
 
-        // Soft, kid-friendly pastel/bright color blocks
         const colors = ["#FF7043", "#66BB6A", "#42A5F5", "#AB47BC", "#FFA726"];
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
@@ -228,7 +227,6 @@
                 ctx.strokeStyle = "#FFFFFF";
                 ctx.stroke();
 
-                // Small white star-circles around the edge to look like a toy game board
                 ctx.save();
                 ctx.translate(radius, radius);
                 ctx.rotate(startAngle + anglePerSegment / 2);
@@ -240,7 +238,6 @@
             }
         }
 
-        // Play clean toy-like clicking audio sounds
         function playTickSound(duration) {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let startTime = audioCtx.currentTime;
@@ -254,7 +251,7 @@
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 
-                osc.frequency.setValueAtTime(700, audioCtx.currentTime); // Soft bubble pop sound
+                osc.frequency.setValueAtTime(700, audioCtx.currentTime); 
                 gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
                 
                 osc.start();
@@ -266,10 +263,9 @@
             nextTick();
         }
 
-        // Fun, magical chime melody when landed
         function playWinFanfare() {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const notes = [523.25, 659.25, 783.99, 987.77]; // C5 - E5 - G5 - B5 sweet major chord
+            const notes = [523.25, 659.25, 783.99, 987.77]; 
             notes.forEach((freq, index) => {
                 setTimeout(() => {
                     const osc = audioCtx.createOscillator();
@@ -293,7 +289,7 @@
             
             scroller.style.transition = "none";
             scroller.style.top = "0px";
-            scroller.innerHTML = '<div class="scroller-item">💭 Finding activity...</div>';
+            scroller.innerHTML = '<div class="scroller-item">💭 Waiting for festival...</div>';
             
             const targetIndex = Math.floor(Math.random() * festivalDatabase.length);
             
@@ -306,43 +302,57 @@
             currentRotation += extraSpins + (targetAngle - (currentRotation % 360));
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
+            // Wheel stops spinning after 3 seconds
             setTimeout(() => {
                 const matchedFestival = festivalDatabase[targetIndex];
                 
-                festivalDisplay.innerText = "🎈 " + matchedFestival.name + "! 🎈";
+                // Show the chosen festival in the question block
+                festivalDisplay.innerText = "🎈 What do you like doing at " + matchedFestival.name + "? 🎈";
                 festivalDisplay.classList.add('celebrate');
                 playWinFanfare();
 
-                const activityPool = matchedFestival.activities;
-                const chosenActivityIndex = Math.floor(Math.random() * activityPool.length);
-                
-                let scrollItemsPool = [];
-                for (let r = 0; r < 4; r++) {
-                    activityPool.forEach(act => scrollItemsPool.push(act));
-                }
+                // Update scroller text to show suspense hint
+                scroller.innerHTML = '<div class="scroller-item">🤔 Think first... (5s)</div>';
 
-                scroller.innerHTML = '';
-                scrollItemsPool.forEach(actText => {
-                    const div = document.createElement('div');
-                    div.className = 'scroller-item';
-                    div.innerText = actText;
-                    scroller.appendChild(div);
-                });
-
-                const rowHeight = 70;
-                const finalTargetRow = (activityPool.length * 2) + chosenActivityIndex;
-                const finalScrollPosition = finalTargetRow * rowHeight;
-
+                // --- 5 SECOND DELAY FOR KIDS TO THINK/ANSWER ORALLY ---
                 setTimeout(() => {
-                    scroller.style.transition = "top 2s cubic-bezier(0.1, 0.8, 0.2, 1)";
-                    scroller.style.top = `-${finalScrollPosition}px`;
-                }, 50);
+                    // Start the ticker sound again to mimic the slot roll
+                    playTickSound(2000);
 
-                setTimeout(() => {
-                    spinBtn.disabled = false;
-                }, 2100);
+                    const activityPool = matchedFestival.activities;
+                    const chosenActivityIndex = Math.floor(Math.random() * activityPool.length);
+                    
+                    let scrollItemsPool = [];
+                    for (let r = 0; r < 4; r++) {
+                        activityPool.forEach(act => scrollItemsPool.push(act));
+                    }
 
-            }, 3000);
+                    scroller.innerHTML = '';
+                    scrollItemsPool.forEach(actText => {
+                        const div = document.createElement('div');
+                        div.className = 'scroller-item';
+                        div.innerText = actText;
+                        scroller.appendChild(div);
+                    });
+
+                    const rowHeight = 70;
+                    const finalTargetRow = (activityPool.length * 2) + chosenActivityIndex;
+                    const finalScrollPosition = finalTargetRow * rowHeight;
+
+                    // Execute the scroll track glide
+                    setTimeout(() => {
+                        scroller.style.transition = "top 2s cubic-bezier(0.1, 0.8, 0.2, 1)";
+                        scroller.style.top = `-${finalScrollPosition}px`;
+                    }, 50);
+
+                    // Re-enable button after the roll finishes completely
+                    setTimeout(() => {
+                        spinBtn.disabled = false;
+                    }, 2100);
+
+                }, 5000); // 5000ms delay window
+
+            }, 3000); // Wheel spin length
         }
 
         drawWheel();
